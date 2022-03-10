@@ -63,6 +63,19 @@ namespace Trivia
             }
         }
 
+        public bool RemovePlayer()
+        {
+            if (_currentPlayer == null)
+                _currentPlayer = _players.FirstOrDefault();
+
+            Console.WriteLine("Le joueur " + _currentPlayer.Name + " a décidé de quitter la partie.");
+            _players.Remove(_currentPlayer);
+            Console.WriteLine("Le joueur a été supprimé. ------------------------------------");
+            IncrementPlayer();
+            return false;
+        }
+
+
         /// Lance le tour du joueur
         public void Roll(int roll, int maxCases = 12)
         {
@@ -104,6 +117,8 @@ namespace Trivia
                     return false;
                 case 7:
                     return WrongAnswer();
+                case 6 :
+                    return RemovePlayer();
                 default:
                      return WasCorrectlyAnswered();
             }
