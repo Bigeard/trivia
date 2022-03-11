@@ -21,15 +21,8 @@ namespace Trivia
             _amountOfGoldToWin = amountOfGoldToWin;
             this.isRockSelected = isRockSelected;
 
-            //List<ECategory> categories = Enum.GetValues(typeof(ECategory))
-
-            var categoryList = Enum.GetValues(typeof(ECategory))
-                .Cast<ECategory>()
-                .Select(v => (int)v)
-                .ToList();
-
-            categoryList.RemoveAt(isRockSelected ? 4 : 3);
-            FillQuestions(categoryList);
+            List<ECategory> categories = Enum.GetValues(typeof(ECategory)).Cast<ECategory>().ToList();
+            FillQuestions(categories);
         }
 
         /// On vérifie si la partie est possible a lancer
@@ -38,7 +31,7 @@ namespace Trivia
             return numberPlayer is >= 2 and < 7;
         }
 
-        private void FillQuestions(List<int> categoryList)
+        private void FillQuestions(List<ECategory> categoryList)
         {
             foreach (var category in categoryList)
             {
@@ -46,7 +39,7 @@ namespace Trivia
                 {
                     _questionList.AddLast(
                         new Question(
-                            i * (1 + category),
+                            i * (1 + (int)category),
                             category,
                             "Question " + (i + 1),
                             "Answer " + (i + 1)
@@ -222,10 +215,12 @@ namespace Trivia
             if (_questionList.Count(x => x.answeredBy == 0) <= _players.Count * 2) // si on a pas au moins 2 questions par joueur
             {
                 Console.WriteLine("Deck ran out of questions! Refueling!");
-                FillQuestions(Enum.GetValues(typeof(ECategory)).Cast<ECategory>().Select(v => (int)v).ToList());
+
+                List<ECategory> categories = Enum.GetValues(typeof(ECategory)).Cast<ECategory>().ToList();
+                FillQuestions(categories);
             }
 
-            Question findQuestion = _questionList.FirstOrDefault(q => q.category == (int)category && q.answeredBy == 0);
+            Question findQuestion = _questionList.FirstOrDefault(q => q.category == category && q.answeredBy == 0);
             if (findQuestion == null)
             {
                 Console.WriteLine("Question not found");

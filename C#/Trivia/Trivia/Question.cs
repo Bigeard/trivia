@@ -3,12 +3,12 @@ namespace Trivia {
     {
 
         public int id;
-        public int category;
+        public ECategory category;
         public string question;
         public string answer;
         public int answeredBy;
 
-        public Question(int id, int category, string question, string answer)
+        public Question(int id, ECategory category, string question, string answer)
         {
             this.id = id;
             this.category = category;
