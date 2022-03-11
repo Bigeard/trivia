@@ -99,7 +99,7 @@ namespace Trivia
 
 
         /// Lance le tour du joueur
-        public void Play(bool witchReadline)
+        public void Play()
         {
             _hasWinner = false;
             ResetPlayer();
@@ -111,19 +111,16 @@ namespace Trivia
                 Console.WriteLine(_currentPlayer.Name + " is the current player");
 
                 ConsoleKey key = ConsoleKey.Enter;
-                if (witchReadline)
+
+                Console.WriteLine("Action : ");
+                Console.WriteLine("1- Jouer 2- Quitter la partie");
+
+
+                while (key != ConsoleKey.D1 && key != ConsoleKey.D2)
                 {
-                    Console.WriteLine("Action : ");
-                    Console.WriteLine("1- Jouer 2- Quitter la partie");
-
-
-                    while (key != ConsoleKey.D1 && key != ConsoleKey.D2)
-                    {
-                        key = Console.ReadKey().Key;
-                        Console.WriteLine();
-                    }
+                    key = Console.ReadKey().Key;
+                    Console.WriteLine();
                 }
-                else { key = ConsoleKey.D1; }
 
                 switch (key)
                 {
@@ -353,9 +350,9 @@ namespace Trivia
         public void ResetPlayer()
         {
             leaderBoard.Clear();
-            foreach(var player in _players)
+            foreach (var player in _players)
             {
-                player.IsJokerUsed= false;
+                player.IsJokerUsed = false;
                 player.LHistorique.Clear();
                 player.Points = 0;
                 player.Streak = 0;
