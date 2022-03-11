@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Trivia
 {
@@ -111,7 +109,7 @@ namespace Trivia
                 IncrementPlayer();
             }
             ShowLeaderBoard();
-
+            
         }
 
         public void ShowLeaderBoard()
@@ -317,7 +315,7 @@ namespace Trivia
 
         public void stat()
         {
-            foreach (var player in _players)
+            foreach (var player in leaderBoard)
             {
                 Console.WriteLine(player.Name);
                 Console.WriteLine("Rock :" + player.LHistorique.FindAll(s => s == ECategory.Rock).Count());
@@ -325,6 +323,11 @@ namespace Trivia
                 Console.WriteLine("Pop :" + player.LHistorique.FindAll(s => s == ECategory.Pop).Count());
                 Console.WriteLine("Sport :" + player.LHistorique.FindAll(s => s == ECategory.Sport).Count());
                 Console.WriteLine("Techno :" + player.LHistorique.FindAll(s => s == ECategory.Techno).Count());
+            }
+
+            foreach (var question in _questionList.GroupBy(x => x.category))
+            {
+                Console.WriteLine(question.Key + " total number of question is " + question.Count() + " out of " + _questionList.Count);
             }
         }
     }
