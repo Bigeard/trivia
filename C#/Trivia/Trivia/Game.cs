@@ -102,6 +102,7 @@ namespace Trivia
         public void Play(bool witchReadline)
         {
             _hasWinner = false;
+            ResetPlayer();
             while (_players.Count > 0 && leaderBoard.Count != 3)
             {
                 if (_currentPlayer == null)
@@ -335,6 +336,23 @@ namespace Trivia
                 Console.WriteLine("Techno :" + player.LHistorique.FindAll(s => s == ECategory.Techno).Count());
             }
 
+        }
+
+        public void ResetPlayer()
+        {
+            leaderBoard.Clear();
+            foreach(var player in _players)
+            {
+                player.IsJokerUsed= false;
+                player.LHistorique.Clear();
+                player.Points = 0;
+                player.Streak = 0;
+                player.TimeInPrison = 1;
+                player.QuestionInPrison = ECategory.Sport;
+                player.IsInPrison = false;
+                player.Position = 0;
+                player.WillQuitPrison = false;
+            }
         }
     }
 

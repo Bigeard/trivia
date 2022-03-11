@@ -32,10 +32,17 @@ namespace Trivia
 
                 var board = new Board(12);
                 var aGame = new Game(maxScore == string.Empty ? 6 : value);
-                aGame.Add(players);
+                
 
-                aGame.Play(true);
-				aGame.stat();
+                ConsoleKey res;
+                do {
+                    aGame.Add(players);
+                    aGame.Play(false);
+                    aGame.stat();
+                    Console.WriteLine("Would you like to play again ? (Y/N)");
+                    res = Console.ReadKey().Key;
+                } while (res == ConsoleKey.Y);
+                
             }
             else
             {
