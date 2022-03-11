@@ -34,16 +34,21 @@ namespace Trivia
         {
             switch (Position)
             {
-                case 0:
+                case 0: 
+                case 1:
+                    return ECategory.Rap;
+                case 2:
+                    return ECategory.Geography;
                 case 4:
+                    return ECategory.Philosophy;
+                case 5:
+                    return ECategory.People;
+                case 6:
+                    return ECategory.Litterature;
                 case 8:
                     return ECategory.Pop;
-                case 1:
-                case 5:
                 case 9:
                     return ECategory.Science;
-                case 2:
-                case 6:
                 case 10:
                     return ECategory.Sport;
                 default:
