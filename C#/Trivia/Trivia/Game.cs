@@ -57,7 +57,7 @@ namespace Trivia
         {
             foreach (var category in categoryList)
             {
-                for (var i = 0; i < 50; i++)
+                for (var i = 0; i < 1; i++)
                 {
                     _questionList.AddLast(
                         new Question(
@@ -115,14 +115,15 @@ namespace Trivia
                 {
                     Console.WriteLine("Action : ");
                     Console.WriteLine("1- Jouer 2- Quitter la partie");
-                    
+
 
                     while (key != ConsoleKey.D1 && key != ConsoleKey.D2)
                     {
                         key = Console.ReadKey().Key;
                         Console.WriteLine();
                     }
-                }else { key = ConsoleKey.D1; }
+                }
+                else { key = ConsoleKey.D1; }
 
                 switch (key)
                 {
@@ -156,17 +157,21 @@ namespace Trivia
 
             if (_currentPlayer.IsInPrison)
             {
-                if (100 - 1/_currentPlayer.TimeInPrison*100 >= new Random().Next(101)) {
-                    _currentPlayer.WillQuitPrison = true;
-                    _currentPlayer.TimeInPrison = 1;
-                    Console.WriteLine(_currentPlayer.Name + " is getting out of prison yet");
+                int outChance = (100 / _currentPlayer.TimeInPrison) + (_currentPlayer.TimeInARowInPrison * 10);
+                Console.WriteLine($"{_currentPlayer.Name} was in prison {_currentPlayer.TimeInPrison} times and have {outChance}% chance to escape it (Time in prison : {_currentPlayer.TimeInPrison}, Time in a row : {_currentPlayer.TimeInARowInPrison})");
+                if (outChance < new Random().Next(100))
+                {
+                    Console.WriteLine(_currentPlayer.Name + " is not getting out of prison");
+                    _currentPlayer.TimeInARowInPrison++;
+                    _currentPlayer.WillQuitPrison = false;
                     return;
                 }
 
-                Console.WriteLine(_currentPlayer.Name + " is not getting out of prison");
-                _currentPlayer.TimeInPrison++;
-                _currentPlayer.WillQuitPrison = false;
+                _currentPlayer.WillQuitPrison = true;
                 _currentPlayer.IsInPrison = false;
+                _currentPlayer.TimeInARowInPrison = 0;
+                Console.WriteLine(_currentPlayer.Name + " is getting out of prison");
+
             }
 
             _currentPlayer.Position += roll;
@@ -225,18 +230,18 @@ namespace Trivia
             var category = (_currentPlayer.IsInPrison && !_currentPlayer.WillQuitPrison)
                 ? _currentPlayer.QuestionInPrison
                 : _currentPlayer.GetCategory(_isRockSelected);
-            
+
             _currentPlayer.LHistorique.Add(category);
 
             Console.WriteLine("The category is " + category);
-            
+
             if (_questionList.Count(x => x.answeredBy == 0) <= _players.Count * 2) // si on a pas au moins 2 questions par joueur
             {
                 Console.WriteLine("Deck ran out of questions! Refueling!");
-                FillQuestions(Enum.GetValues(typeof(ECategory)).Cast<ECategory>().Select(v => (int) v).ToList());
+                FillQuestions(Enum.GetValues(typeof(ECategory)).Cast<ECategory>().Select(v => (int)v).ToList());
             }
-            
-            Question findQuestion = _questionList.FirstOrDefault(q => q.category == (int) category && q.answeredBy == 0);
+
+            Question findQuestion = _questionList.FirstOrDefault(q => q.category == (int)category && q.answeredBy == 0);
             if (findQuestion == null)
             {
                 Console.WriteLine("Question not found");
@@ -276,10 +281,17 @@ namespace Trivia
 
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_currentPlayer.Name + " was sent to the prison");
-            _currentPlayer.IsInPrison = true;
+            if (!_currentPlayer.IsInPrison)
+            {
+                _currentPlayer.IsInPrison = true;
+                _currentPlayer.TimeInPrison++;
+            }
 
-            _currentPlayer.QuestionInPrison = SelectQuestionInPrison();
-            Console.WriteLine("Vous venez de choisir la catégorie " + _currentPlayer.QuestionInPrison.ToString());
+            if (_currentPlayer.TimeInARowInPrison == 0)
+            {
+                _currentPlayer.QuestionInPrison = SelectQuestionInPrison();
+                Console.WriteLine("Vous venez de choisir la catégorie " + _currentPlayer.QuestionInPrison.ToString());
+            }
 
             IncrementPlayer();
             return false;
