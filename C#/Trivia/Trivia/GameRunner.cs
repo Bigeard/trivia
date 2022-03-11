@@ -5,8 +5,6 @@ namespace Trivia
 {
     public class GameRunner
     {
-        private static bool _hasWinner;
-
         public static void Main(string[] args)
         {
             var players = new List<string> { "Chet", "Pat", "Sue" };
@@ -30,17 +28,26 @@ namespace Trivia
                     maxScore = Console.ReadLine();
                 }
 
-                var board = new Board(12);
-                var aGame = new Game(maxScore == string.Empty ? 6 : value);
-                
+                Console.WriteLine("Would you like to play with techno questions instead of rock questions ? (Y/N)");
+                var key = ConsoleKey.Enter;
+                while (key is not (ConsoleKey.Y or ConsoleKey.N))
+                {
+                    key = Console.ReadKey().Key;
+                    Console.WriteLine();
+                }
+
+                bool isRockSelected = key == ConsoleKey.N;
 
                 ConsoleKey res;
                 do {
+
+                    var aGame = new Game(maxScore == string.Empty ? 6 : value, isRockSelected);
                     aGame.Add(players);
-                    aGame.Play(false);
+                    aGame.Play();
                     aGame.stat();
                     Console.WriteLine("Would you like to play again ? (Y/N)");
                     res = Console.ReadKey().Key;
+                    Console.Clear();
                 } while (res == ConsoleKey.Y);
                 
             }

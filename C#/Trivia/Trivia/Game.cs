@@ -10,40 +10,25 @@ namespace Trivia
     {
         private readonly List<Player> _players = new();
 
-        private readonly LinkedList<string> _popQuestions = new();
-        private readonly LinkedList<string> _scienceQuestions = new();
-        private readonly LinkedList<string> _sportsQuestions = new();
-        private readonly LinkedList<string> _rockQuestions = new();
-        private readonly LinkedList<string> _technoQuestions = new();
-
         private readonly LinkedList<Question> _questionList = new();
         private Player _currentPlayer;
         private int _amountOfGoldToWin;
-        private readonly bool _isRockSelected;
-        private bool _hasWinner;
+        public bool isRockSelected;
         private List<Player> leaderBoard = new();
 
-        public Game(int amountOfGoldToWin)
+        public Game(int amountOfGoldToWin, bool isRockSelected)
         {
-
             _amountOfGoldToWin = amountOfGoldToWin;
+            this.isRockSelected = isRockSelected;
 
-            Console.WriteLine("Would you like to play with techno questions instead of rock questions ? (Y/N)");
-            var key = ConsoleKey.Enter;
-            while (key is not (ConsoleKey.Y or ConsoleKey.N))
-            {
-                key = Console.ReadKey().Key;
-                Console.WriteLine();
-            }
+            //List<ECategory> categories = Enum.GetValues(typeof(ECategory))
 
             var categoryList = Enum.GetValues(typeof(ECategory))
                 .Cast<ECategory>()
                 .Select(v => (int)v)
                 .ToList();
 
-            _isRockSelected = key == ConsoleKey.N;
-            categoryList.RemoveAt(_isRockSelected ? 4 : 3);
-
+            categoryList.RemoveAt(isRockSelected ? 4 : 3);
             FillQuestions(categoryList);
         }
 
@@ -101,8 +86,6 @@ namespace Trivia
         /// Lance le tour du joueur
         public void Play()
         {
-            _hasWinner = false;
-            ResetPlayer();
             while (_players.Count > 0 && leaderBoard.Count != 3)
             {
                 if (_currentPlayer == null)
@@ -155,8 +138,12 @@ namespace Trivia
             if (_currentPlayer.IsInPrison)
             {
                 int outChance = (100 / _currentPlayer.TimeInPrison) + (_currentPlayer.TimeInARowInPrison * 10);
+                int rollOut = new Random().Next(100);
+
                 Console.WriteLine($"{_currentPlayer.Name} was in prison {_currentPlayer.TimeInPrison} times and have {outChance}% chance to escape it (Time in prison : {_currentPlayer.TimeInPrison}, Time in a row : {_currentPlayer.TimeInARowInPrison})");
-                if (outChance < new Random().Next(100))
+                Console.WriteLine($"Roll {rollOut}");
+
+                if (outChance < rollOut)
                 {
                     Console.WriteLine(_currentPlayer.Name + " is not getting out of prison");
                     _currentPlayer.TimeInARowInPrison++;
@@ -226,7 +213,7 @@ namespace Trivia
         {
             var category = (_currentPlayer.IsInPrison && !_currentPlayer.WillQuitPrison)
                 ? _currentPlayer.QuestionInPrison
-                : _currentPlayer.GetCategory(_isRockSelected);
+                : _currentPlayer.GetCategory(isRockSelected);
 
             _currentPlayer.LHistorique.Add(category);
 
@@ -315,7 +302,7 @@ namespace Trivia
                     return ECategory.Sport;
                 case ConsoleKey.D:
 
-                    return _isRockSelected ? ECategory.Rock : ECategory.Techno;
+                    return isRockSelected ? ECategory.Rock : ECategory.Techno;
                 default:
                     return ECategory.Science;
             }
@@ -344,25 +331,6 @@ namespace Trivia
                 Console.WriteLine("Sport :" + player.LHistorique.FindAll(s => s == ECategory.Sport).Count());
                 Console.WriteLine("Techno :" + player.LHistorique.FindAll(s => s == ECategory.Techno).Count());
             }
-
-        }
-
-        public void ResetPlayer()
-        {
-            leaderBoard.Clear();
-            foreach (var player in _players)
-            {
-                player.IsJokerUsed = false;
-                player.LHistorique.Clear();
-                player.Points = 0;
-                player.Streak = 0;
-                player.TimeInPrison = 1;
-                player.QuestionInPrison = ECategory.Sport;
-                player.IsInPrison = false;
-                player.Position = 0;
-                player.WillQuitPrison = false;
-            }
         }
     }
-
 }

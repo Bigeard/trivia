@@ -30,7 +30,7 @@ namespace Trivia
             LHistorique = new List<ECategory>();
         }
 
-        public ECategory GetCategory(bool techno)
+        public ECategory GetCategory(bool isRockSelected)
         {
             switch (Position)
             {
@@ -47,7 +47,7 @@ namespace Trivia
                 case 10:
                     return ECategory.Sport;
                 default:
-                    return techno ? ECategory.Techno : ECategory.Rock;
+                    return isRockSelected ? ECategory.Rock : ECategory.Techno;
             }
         }
 
