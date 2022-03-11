@@ -277,9 +277,9 @@ namespace Trivia
         private ECategory SelectQuestionInPrison()
         {
             Console.WriteLine("Vous vous dirigez en prison, veuillez choisir la catégorie de votre prochaine question :");
-            Console.WriteLine("Pop (A), Science (B), Sport (C) or Rock/Techno (D)");
+            Console.WriteLine("Pop (A), Science (B), Sport (C), Rock/Techno (D), Rap (E), Philosophie (F), Geographie (G), People (H) ou Littérature (I)");
             var key = ConsoleKey.Enter;
-            while (key is not (ConsoleKey.A or ConsoleKey.B or ConsoleKey.C or ConsoleKey.D))
+            while (key is not (ConsoleKey.A or ConsoleKey.B or ConsoleKey.C or ConsoleKey.D or ConsoleKey.E or ConsoleKey.F or ConsoleKey.G or ConsoleKey.H or ConsoleKey.I))
             {
                 key = Console.ReadKey().Key;
                 Console.WriteLine();
@@ -294,8 +294,17 @@ namespace Trivia
                 case ConsoleKey.C:
                     return ECategory.Sport;
                 case ConsoleKey.D:
-
                     return isRockSelected ? ECategory.Rock : ECategory.Techno;
+                case ConsoleKey.E:
+                    return ECategory.Rap;
+                case ConsoleKey.F:
+                    return ECategory.Philosophy;
+                case ConsoleKey.G:
+                    return ECategory.Geography;
+                case ConsoleKey.H:
+                    return ECategory.People;
+                case ConsoleKey.I:
+                    return ECategory.Litterature;
                 default:
                     return ECategory.Science;
             }
