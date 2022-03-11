@@ -279,7 +279,7 @@ namespace Trivia
         private ECategory SelectQuestionInPrison()
         {
             Console.WriteLine("Vous vous dirigez en prison, veuillez choisir la catégorie de votre prochaine question :");
-            Console.WriteLine("Pop (A), Science (B), Sport (C), Rock/Techno (D), Rap (E), Philosophie (F), Geographie (G), people (H) ou littérature (I)");
+            Console.WriteLine("Pop (A), Science (B), Sport (C), Rock/Techno (D), Rap (E), Philosophie (F), Geographie (G), People (H) ou Littérature (I)");
             var key = ConsoleKey.Enter;
             while (key is not (ConsoleKey.A or ConsoleKey.B or ConsoleKey.C or ConsoleKey.D or ConsoleKey.E or ConsoleKey.F or ConsoleKey.G or ConsoleKey.H or ConsoleKey.I))
             {
