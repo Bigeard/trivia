@@ -12,13 +12,13 @@ namespace Trivia
             var players = new List<string> { "Chet", "Pat", "Sue" };
             if (Game.IsPlayable(players.Count))
             {
-                Console.WriteLine("Choose a maximum score (default 6)");
+                Console.WriteLine("Choose a maximum score");
                 var maxScore = Console.ReadLine();
                 int value;
                 bool minimumValue = true;
                 while (!int.TryParse(maxScore, out value) && !string.IsNullOrWhiteSpace(maxScore) || minimumValue)
                 {
-                    if (value != 0 && value < 6)
+                    if (value == 0 || value < 6)
                     {
                         Console.WriteLine("Only number above 6 accepted or enter to use default value");
                     }
